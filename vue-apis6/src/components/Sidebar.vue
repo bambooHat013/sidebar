@@ -15,30 +15,79 @@
     <h3>Menu</h3>
     <div class="menu">
       <!-- 列表1: HOME -->
-      <router-link class="button" to="/">
+      <div @click="toggleHomeSubMenu" class="button">
         <span class="material-symbols-outlined">home</span>
         <span class="text">Home</span>
-      </router-link>
+      </div>
+      <!-- 新增：用 v-if 控制子目錄的顯示 -->
+      <div v-if="isHomeExpanded" class="submenu">
+        <router-link class="button sub-button" to="/">
+          <span class="sub-item">Sub 1</span>
+        </router-link>
+        <router-link class="button sub-button" to="/1">
+          <span class="sub-item">Sub 2</span>
+        </router-link>
+      </div>
+
       <!-- 列表2: About -->
-      <router-link class="button" to="/about">
+      <div @click="toggleAboutSubMenu" class="button">
         <span class="material-symbols-outlined">visibility</span>
         <span class="text">About</span>
-      </router-link>
+      </div>
+      <div v-if="isAboutExpanded" class="submenu">
+        <router-link class="button sub-button" to="/about">
+          <span class="sub-item">Sub 1</span>
+        </router-link>
+        <router-link class="button sub-button" to="/2">
+          <span class="sub-item">Sub 2</span>
+        </router-link>
+      </div>
+
       <!-- 列表3: Team -->
-      <router-link class="button" to="/team">
+      <div @click="toggleTeamSubMenu" class="button">
         <span class="material-symbols-outlined">group</span>
         <span class="text">Team</span>
-      </router-link>
+      </div>
+      <div v-if="isTeamExpanded" class="submenu">
+        <!-- Sub-sections for Team -->
+        <router-link class="button sub-button" to="/team">
+          <span class="sub-item">Sub 1</span>
+        </router-link>
+        <router-link class="button sub-button" to="/3">
+          <span class="sub-item">Sub 2</span>
+        </router-link>
+      </div>
+
       <!-- 列表4: Contact -->
-      <router-link class="button" to="/contact">
+      <div @click="toggleContactSubMenu" class="button">
+        <!-- 新增 -->
         <span class="material-symbols-outlined">email</span>
         <span class="text">Contact</span>
-      </router-link>
+      </div>
+      <div v-if="isContactExpanded" class="submenu">
+        <!-- Sub-sections for Contact -->
+        <router-link class="button sub-button" to="/contact">
+          <span class="sub-item">Sub 1</span>
+        </router-link>
+        <router-link class="button sub-button" to="/4">
+          <span class="sub-item">Sub 2</span>
+        </router-link>
+      </div>
+
       <!-- 列表5: Settings -->
-      <router-link class="button" to="/settings">
+      <div @click="toggleSettingsSubMenu" class="button">
         <span class="material-symbols-outlined">settings</span>
         <span class="text">Settings</span>
-      </router-link>
+      </div>
+      <div v-if="isSettingsExpanded" class="submenu">
+        <!-- Sub-sections for Settings -->
+        <router-link class="button sub-button" to="/settings">
+          <span class="sub-item">Sub 1</span>
+        </router-link>
+        <router-link class="button sub-button" to="/5">
+          <span class="sub-item">Sub 2</span>
+        </router-link>
+      </div>
     </div>
   </aside>
 </template>
@@ -51,10 +100,63 @@ const is_expanded = ref(localStorage.getItem("is_expanded") === "true");
 const ToggleMenu = () => {
   is_expanded.value = !is_expanded.value;
   localStorage.setItem("is_expanded", is_expanded.value);
+
+  // 新增：如果側邊欄被關閉，則收縮所有子目錄
+  if (!is_expanded.value) {
+    isHomeExpanded.value = false;
+    isAboutExpanded.value = false;
+    isTeamExpanded.value = false;
+    isContactExpanded.value = false;
+    isSettingsExpanded.value = false;
+  }
+};
+
+// 用於控制 Home 子目錄的反應性變量和函數
+const isHomeExpanded = ref(false);
+const toggleHomeSubMenu = () => {
+  isHomeExpanded.value = !isHomeExpanded.value;
+};
+
+// 用於控制 About 子目錄的反應性變量和函數
+const isAboutExpanded = ref(false);
+const toggleAboutSubMenu = () => {
+  isAboutExpanded.value = !isAboutExpanded.value;
+};
+
+// 用於控制 Team 子目錄的反應性變量和函數
+const isTeamExpanded = ref(false);
+const toggleTeamSubMenu = () => {
+  isTeamExpanded.value = !isTeamExpanded.value;
+};
+
+// 用於控制 Contact 子目錄的反應性變量和函數
+const isContactExpanded = ref(false);
+const toggleContactSubMenu = () => {
+  isContactExpanded.value = !isContactExpanded.value;
+};
+
+// 用於控制 Settings 子目錄的反應性變量和函數
+const isSettingsExpanded = ref(false);
+const toggleSettingsSubMenu = () => {
+  isSettingsExpanded.value = !isSettingsExpanded.value;
 };
 </script>
 
 <style lang="scss" scoped>
+// 用於標記子目錄的樣式
+.button {
+  &.sub-button {
+    padding-left: 3rem; // 增加左邊距來表示它是一個子目錄
+  }
+}
+
+// 修改子目錄樣式
+.submenu .sub-item{
+  padding-left: 50px;
+  font-weight: bold;
+  color: var(--light);
+}
+
 aside {
   display: flex;
   flex-direction: column;
